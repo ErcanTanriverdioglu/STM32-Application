@@ -1,0 +1,65 @@
+#include "stm32f10x.h"                 
+#include "stm32f10x_adc.h"            
+uint16_t adcValue=0;
+void gpioConfig()
+{
+	GPIO_InitTypeDef GPIOAyar;
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+	
+	GPIOAyar.GPIO_Mode=GPIO_Mode_Out_PP;
+	GPIOAyar.GPIO_Pin=GPIO_Pin_0;
+	GPIOAyar.GPIO_Speed=GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB,&GPIOAyar);
+	
+	GPIOAyar.GPIO_Mode=GPIO_Mode_AIN;
+	GPIOAyar.GPIO_Pin=GPIO_Pin_0;
+	GPIO_Init(GPIOA,&GPIOAyar);
+	
+}
+void adcConfig()
+{
+	ADC_InitTypeDef ADCAyar;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1,ENABLE);
+	
+	ADCAyar.ADC_ContinuousConvMode=ENABLE;
+	ADCAyar.ADC_DataAlign=ADC_DataAlign_Right;
+	ADCAyar.ADC_ExternalTrigConv=ADC_ExternalTrigConv_None;
+	ADCAyar.ADC_Mode=ADC_Mode_Independent;
+	ADCAyar.ADC_NbrOfChannel=1;
+	ADCAyar.ADC_ScanConvMode=DISABLE;
+  
+	ADC_Init(ADC1,&ADCAyar);
+	ADC_Cmd(ADC1,ENABLE);
+	
+}
+
+uint16_t readADC()
+{
+	ADC_RegularChannelConfig(ADC1,ADC_Channel_0,1,ADC_SampleTime_55Cycles5);
+	ADC_SoftwareStartConvCmd(ADC1,ENABLE);
+	while(ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)==RESET);
+	return ADC_GetConversionValue(ADC1);
+}
+
+int main()
+{
+	gpioConfig();
+	adcConfig();
+	
+	while(1)
+	{
+	 adcValue=readADC();
+	 
+		if(adcValue>1500)
+		{
+			GPIO_SetBits(GPIOB,GPIO_Pin_0);
+		}
+		else
+		{
+			GPIO_ResetBits(GPIOB,GPIO_Pin_0);
+		}
+	
+	}
+	
+}
