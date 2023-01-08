@@ -30,6 +30,7 @@ void adcConfig()
 	ADCAyar.ADC_ScanConvMode=DISABLE;
   
 	ADC_Init(ADC1,&ADCAyar);
+	
 	ADC_Cmd(ADC1,ENABLE);
 	
 }
