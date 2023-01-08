@@ -51,7 +51,7 @@ int main()
 	{
 	 adcValue=readADC();
 	 
-		if(adcValue>1500)
+		if(adcValue<1500)
 		{
 			GPIO_SetBits(GPIOB,GPIO_Pin_0);
 		}
