@@ -1,0 +1,99 @@
+#include "stm32f10x.h"                  
+uint16_t buttonState=0;
+uint16_t counter=0;
+#define A GPIO_Pin_0 
+#define B GPIO_Pin_1
+#define C GPIO_Pin_11
+#define D GPIO_Pin_12
+#define E GPIO_Pin_4
+#define F GPIO_Pin_5
+#define G GPIO_Pin_6
+#define KIRMIZI GPIO_Pin_7
+#define SARI GPIO_Pin_8
+#define YESIL GPIO_Pin_9
+
+
+void gpioConfig()
+{
+ GPIO_InitTypeDef GPIOAyar;
+ RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE); //LED
+ RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);  //BUTON
+	
+	//LEDLERİN BAĞLI OLDUĞU PORTLARIN AYARLANMASI
+	GPIOAyar.GPIO_Mode=GPIO_Mode_Out_PP;
+	GPIOAyar.GPIO_Pin=A | B | C | D | E | F | G | KIRMIZI | SARI | YESIL ;
+	GPIOAyar.GPIO_Speed=GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA,&GPIOAyar);
+	
+	//BUTON AYARLAMALARI
+	
+	GPIOAyar.GPIO_Mode=GPIO_Mode_IPD;
+	GPIOAyar.GPIO_Pin=GPIO_Pin_10;
+	GPIO_Init(GPIOC,&GPIOAyar);
+	
+}
+//DELAY FONKSİYONU
+void delay(uint32_t zaman)
+{
+
+	while(zaman--);
+}
+
+int main()
+{
+	gpioConfig();		
+	while(1)
+	{
+  buttonState=GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_10);
+			
+	
+	if(buttonState==1)
+	{
+	 delay(7200000);
+	 GPIO_SetBits(GPIOA,A|B|C|D|E|F);
+	 GPIO_ResetBits(GPIOA,YESIL);
+	 GPIO_ResetBits(GPIOA,A|B|F|G|C|D);
+	 GPIO_SetBits(GPIOA,KIRMIZI);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|B|F|G|C|D);
+	 GPIO_ResetBits(GPIOA,A|B|C|D|E|F|G);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|B|C|D|E|F|G);
+	 GPIO_ResetBits(GPIOA,A|B|C|F);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|B|C|F);
+	 GPIO_ResetBits(GPIOA,A|F|G|E|C|D);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|F|G|E|C|D);
+	 GPIO_ResetBits(GPIOA,A|F|G|C|D);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|F|G|C|D);
+	 GPIO_ResetBits(GPIOA,F|G|C|B);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,F|G|C|B);
+	 GPIO_ResetBits(GPIOA,A|B|C|D|G);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|B|C|D|G);
+	 GPIO_ResetBits(GPIOA,KIRMIZI);
+	 GPIO_SetBits(GPIOA,SARI);
+	 GPIO_ResetBits(GPIOA,A|B|G|E|D);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,A|B|G|E|D);
+	 GPIO_SetBits(GPIOA,SARI);
+	 GPIO_ResetBits(GPIOA,B|C);
+	 delay(3600000);
+	 GPIO_SetBits(GPIOA,B|C);
+	 GPIO_ResetBits(GPIOA,SARI);
+	 GPIO_SetBits(GPIOA,YESIL);
+	 
+	 
+	}
+		
+	else if(counter==0) {
+		GPIO_SetBits(GPIOA,YESIL);
+		GPIO_ResetBits(GPIOA,A|B|C|D|E|F);
+		GPIO_SetBits(GPIOA,G);
+		
+   	}
+}
+	}
