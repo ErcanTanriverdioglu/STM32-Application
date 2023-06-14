@@ -25,7 +25,7 @@ void gpioConfig(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
-	//PA9->TX------------------------------------------------
+	//PA9->TX-------------------------------------------------
 	GPIOAyar.GPIO_Mode=GPIO_Mode_AF_PP;
 	GPIOAyar.GPIO_Pin=GPIO_Pin_9;
 	GPIOAyar.GPIO_Speed=GPIO_Speed_50MHz;
