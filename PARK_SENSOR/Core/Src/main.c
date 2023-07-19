@@ -118,7 +118,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); 	//7199 PERİOD DEĞERİ
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); 	
     DWT_Init();
     SSD1306_Init();
     SSD1306_Clear();
