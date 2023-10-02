@@ -90,23 +90,23 @@ static void MX_USART1_UART_Init(void);
 
 void SIMVeriGonder(char *komut)
 {
-	memset(Buffer,0,sizeof(Buffer));
-	HAL_UART_Transmit(&huart1,(uint8_t *)komut,strlen(komut),100);
-	HAL_UART_Receive (&huart1, Buffer, 100, 100);
-	if(strstr((char *)Buffer,"ERROR")){SimError = 1;}
-	else{SimError = 0;}
+   memset(Buffer,0,sizeof(Buffer));
+   HAL_UART_Transmit(&huart1,(uint8_t *)komut,strlen(komut),100);
+   HAL_UART_Receive (&huart1, Buffer, 100, 100);
+   if(strstr((char *)Buffer,"ERROR")){SimError = 1;}
+   else{SimError = 0;}
 }
 
 void MQTT_Protocol_Settings(void)
 {
-	ATReady = 0;
-	CREGReady = 0;
+    ATReady = 0;
+    CREGReady = 0;
 
-	SIMVeriGonder("AT+CMQTTDISC=0,120\r\n");
-	SIMVeriGonder("AT+CMQTTREL=0\r\n");
-	SIMVeriGonder("AT+CMQTTSTOP\r\n");
+    SIMVeriGonder("AT+CMQTTDISC=0,120\r\n");
+    SIMVeriGonder("AT+CMQTTREL=0\r\n");
+    SIMVeriGonder("AT+CMQTTSTOP\r\n");
 
-	SIMVeriGonder("AT\r\n");
+    SIMVeriGonder("AT\r\n");
     HAL_Delay(50);
     if(strstr((char *)Buffer,"OK"))
     {
@@ -114,7 +114,7 @@ void MQTT_Protocol_Settings(void)
     }
   if(ATReady)
   {
-	SIMVeriGonder("AT+CREG?\r\n");
+    SIMVeriGonder("AT+CREG?\r\n");
     if(strstr((char *)Buffer,"+CREG: 0,1"))
      {
         CREGReady = 1;
@@ -122,39 +122,39 @@ void MQTT_Protocol_Settings(void)
   }
   if(CREGReady)
   {
-	SIMVeriGonder("AT+CVAUXV=3050\r\n");
-	SIMVeriGonder("AT+CVAUXS=1\r\n");
-	SIMVeriGonder("AT+CMQTTSTART\r\n");
-	SIMVeriGonder("AT+CMQTTACCQ=0,\"kullanici\"\r\n");
-	sprintf(ATData,"AT+CMQTTCONNECT=0,\"%s:%d\",60,1,\"%s\",\"%s\"\r\n",url,port,kullaniciadi,sifre);
-	SIMVeriGonder(ATData);
-	HAL_Delay(2000);
+   SIMVeriGonder("AT+CVAUXV=3050\r\n");
+   SIMVeriGonder("AT+CVAUXS=1\r\n");
+   SIMVeriGonder("AT+CMQTTSTART\r\n");
+   SIMVeriGonder("AT+CMQTTACCQ=0,\"kullanici\"\r\n");
+   sprintf(ATData,"AT+CMQTTCONNECT=0,\"%s:%d\",60,1,\"%s\",\"%s\"\r\n",url,port,kullaniciadi,sifre);
+   SIMVeriGonder(ATData);
+   HAL_Delay(2000);
   }
 }
 
 
 void SIM_ReadGPS(void)
 {
-	SIMVeriGonder("AT+CGPS=1\r\n");
-	SIMVeriGonder("AT+CGPSINFO\r\n");
-	  if(strstr((char *)Buffer,"CGPSINFO:"))
-	  {
-	  	sprintf(GPSBuffer,Buffer);
-	  	SIM_GPS_Edit();
-	  	memset(GPSBuffer,0,strlen(GPSBuffer));
-	  }
+   SIMVeriGonder("AT+CGPS=1\r\n");
+   SIMVeriGonder("AT+CGPSINFO\r\n");
+   if(strstr((char *)Buffer,"CGPSINFO:"))
+    {
+   sprintf(GPSBuffer,Buffer);
+   SIM_GPS_Edit();
+   memset(GPSBuffer,0,strlen(GPSBuffer));
+    }
 }
 
 void MQTT_Protocol_Send(void)
 {
-  sprintf(ATData,"AT+CMQTTTOPIC=0,%d\r\n",strlen(kuyruk));
-  SIMVeriGonder(ATData);
-  sprintf(ATData,"%s\r\n",kuyruk);
-  SIMVeriGonder(ATData);
-	sprintf(ATData,"AT+CMQTTPAYLOAD=0,%d\r\n",strlen(DataBuffer));
-	SIMVeriGonder(ATData);
-	SIMVeriGonder(DataBuffer);
-	SIMVeriGonder("AT+CMQTTPUB=0,1,60\r\n");
+   sprintf(ATData,"AT+CMQTTTOPIC=0,%d\r\n",strlen(kuyruk));
+   SIMVeriGonder(ATData);
+   sprintf(ATData,"%s\r\n",kuyruk);
+   SIMVeriGonder(ATData);
+   sprintf(ATData,"AT+CMQTTPAYLOAD=0,%d\r\n",strlen(DataBuffer));
+   SIMVeriGonder(ATData);
+   SIMVeriGonder(DataBuffer);
+   SIMVeriGonder("AT+CMQTTPUB=0,1,60\r\n");
 }
 
 
